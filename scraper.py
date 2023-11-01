@@ -1,21 +1,25 @@
 from bs4 import BeautifulSoup
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 import pandas as pd
 
+options = Options()
+options.add_argument("--headless")
+
 games_year = {
-    #2002: 17,
-    #2003: 17,
-    #2004: 17,
-    #2005: 17,
-    #2006: 17,
-    #2007: 17,
-    #2008: 17,
-    #2009: 17,
-    #2010: 17,
+    # 2002: 17,
+    # 2003: 17,
+    2004: 17,
+    2005: 17,
+    2006: 17,
+    2007: 17,
+    2008: 17,
+    2009: 17,
+    2010: 17,
     2011: 17,
     2012: 17,
     2013: 17,
@@ -31,26 +35,27 @@ games_year = {
     2023: 8,
 }
 positions = [
-    #"qb", 
-    #"rb", 
-    #"wr", 
-    #"te", 
-    #"k", 
-    "dst", 
-    "dl", 
-    #"lb", 
-    #"db"
-    ]
+    # "qb",
+    "rb",
+    "wr",
+    "te",
+    # "k",
+    # "dst",
+    # "dl",
+    # "lb",
+    # "db"
+]
 
 for year, games in games_year.items():
     weeks = [i + 1 for i in range(games)]
     for pos in positions:
         pos_df = pd.DataFrame()
         for week in weeks:
+            print(year, week, pos)
             got_data = False
             while not got_data:
                 try:
-                    driver = webdriver.Chrome()
+                    driver = webdriver.Chrome(options=options)
                     driver.get(
                         f"https://www.fantasypros.com/nfl/stats/{pos}.php?year={year}&roster=consensus&range=week&week={week}"
                     )
@@ -96,7 +101,7 @@ for year, games in games_year.items():
                     got_data = True
                 except:
                     pass
-                
+
         pos_df.to_excel(f"{pos}_{year}.xlsx", index=False)
 # qb_df.to_excel("qb.xlsx", index=False)
 # rb_df.to_excel("rb.xlsx", index=False)
