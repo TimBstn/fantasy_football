@@ -22,16 +22,20 @@ The results of our experiments demonstrate the comparative strengths and weaknes
 # Next Steps
 - vs divisional opponent, AFC, NFC
 - Projected Points of ESPN
-- Weather
-
+- Time Series LSTM-RNN model
+- use NLP such as in (Baugham 2021): The paper details a novel machine learning NLP pipeline incorporating statistical entity detectors and deep learning feedforward neural networks with 98 layers for player classification. It achieves a high analogy test accuracy of 100% and keyword test accuracy of 80% using news articles, videos, and expert opinions, while providing player classifications and point projections with low Root Mean Squared Error.
+- create starting lineup (Gupta 2019); "
+Using the points for the past years, time series forecasting techniques were leveraged to predict next year’s performance. To
+be robust in approach and consider both linearity and non-linearity, Autoregressive Integrated Moving Average (ARIMA) and
+Recurrent Neural Networks (RNNs) were considered for modelling. After obtaining the points for the entire roster, Linear
+Programming (LPP) basics were applied to adhere to all constraints and finalise a suitable starting dream team."
 # References
 
 ## Data
-- FantasyPros. (11/2023). Fantasy Football Stats. https://www.fantasypros.com/nfl/stats/qb.php
 - FantasyData. (11/2023). Fantasy Football Stats and Season Leaders. https://fantasydata.com/nfl/fantasy-football-leaders
 - SportsOddsHistory. (11/2023). Historical NFL Game Odds. https://www.sportsoddshistory.com/nfl-game-odds/
-- NFL. (11/2023). Games. https://www.nfl.com/scores/
 - Pro Football Reference. (11/2023). NFL Coaches. https://www.pro-football-reference.com/years/2023/coaches.htm
+- Pro Football Reference. (11/2023). NFL Weeks. https://www.pro-football-reference.com/years/2023/week_1.htm
 
 ## Research
 - [Baughman, A., Forester, M., Powell, J., Morales, E., McPartlin, S., & Bohm, D. (2021). Deep Artificial Intelligence for Fantasy Football Language Understanding.](https://arxiv.org/ftp/arxiv/papers/2111/2111.02874.pdf)
