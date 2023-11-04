@@ -53,6 +53,28 @@ def get_html(driver: webdriver.Chrome) -> BeautifulSoup:
     return BeautifulSoup(driver.page_source, "lxml")
 
 
+def find_div(html: BeautifulSoup, id: str = None) -> BeautifulSoup:
+    """
+    Look in the children of html element and
+    find the first div that matches the given criteria
+
+    Parameters
+    ----------
+    html: BeautifulSoup
+        html of website
+    id: str, optional
+        id of div in html
+
+    Returns
+    -------
+    BeautifulSoup:
+        div html
+    """
+    if id:
+        return html.find("div", id=id)
+    return html.find("div")
+
+
 def find_span(html: BeautifulSoup, id: str = None) -> BeautifulSoup:
     """
     Look in the children of html element and
@@ -73,6 +95,24 @@ def find_span(html: BeautifulSoup, id: str = None) -> BeautifulSoup:
     if id:
         return html.find("span", id=id)
     return html.find("span")
+
+
+def find_all_p(html: BeautifulSoup) -> list:
+    """
+    Look in the children of html element and
+    find the p's that match the given criteria
+
+    Parameters
+    ----------
+    html: BeautifulSoup
+        html of website
+
+    Returns
+    -------
+    list:
+        list of all p's
+    """
+    return html.find_all("p")
 
 
 def find_table(html: BeautifulSoup, id: str = None) -> BeautifulSoup:
@@ -97,7 +137,7 @@ def find_table(html: BeautifulSoup, id: str = None) -> BeautifulSoup:
     return html.find("table")
 
 
-def find_rows(table: BeautifulSoup) -> list:
+def find_all_rows(table: BeautifulSoup) -> list:
     """
     Look in the children of table element and
     find the all rows that match the given criteria
@@ -133,7 +173,7 @@ def find_table_header(table: BeautifulSoup) -> BeautifulSoup:
     return table.find("th")
 
 
-def find_table_cells(table: BeautifulSoup) -> list:
+def find_all_table_cells(table: BeautifulSoup) -> list:
     """
     Look in the children of table element and
     find the table cells that match the given criteria

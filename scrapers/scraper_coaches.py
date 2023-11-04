@@ -2,9 +2,10 @@ import pandas as pd
 import fantasy_football.utils.header_mapping as header_mapping
 import fantasy_football.utils.logging as logging
 import fantasy_football.scrapers.scraper as scraper
+from typing import Tuple
 
 
-def scrape_coaches(years: list) -> pd.DataFrame:
+def scrape_data(years: list) -> pd.DataFrame:
     """
     Scrape coach data from
     https://www.pro-football-reference.com/years/{year}/coaches.htm
@@ -16,7 +17,63 @@ def scrape_coaches(years: list) -> pd.DataFrame:
 
     Returns
     -------
-    DataFrame
+    DataFrame:
+        year: int
+            season year
+        coach_id: str
+            coaches pro football reference id
+        coach_name: str
+            coaches name
+        birthday: str
+            coaches birthdaz
+        birth_location: str
+            coaches birth location
+        team_id: str
+            teams pro football reference id
+        games: int
+            number of games that season
+        wins: int
+            number of wins that season
+        losses: int
+            number of losses that season
+        ties: int
+            number of ties that season
+        games_with_team: int
+            number of games whit that team
+        wins_with_team: int
+            number of wins with that team
+        losses_with_team: int
+            number of losses with that team
+        ties_with_team: int
+            number of ties with that team
+        games_career: int
+            number of games in coaching career
+        wins_career: int
+            number of wins in coaching career
+        losses_career: int
+            number of losses in coaching career
+        ties_career: int
+            number of ties in coaching career
+        playoff_games: int
+            number of playoff games that season
+        playoff_wins: int
+            number of playoff wins that season
+        playoff_losses: int
+            number of playoff losses that season
+        playoff_games_team: int
+            number of playoffs games with that team
+        playoff_wins_team: int
+            number of playoff wins with that team
+        playoff_losses_team: int
+            number of playoff losses with that team
+        playoff_games_career: int
+            number of playoff games in coaching career
+        playoff_wins_career: int
+            number of playoff wins in coaching career
+        playoff_losses_career: int
+            number of playoff losses in coaching career
+        remark: str
+            comment
     """
     # iterate over years
     data = list()
@@ -35,7 +92,7 @@ def scrape_coaches(years: list) -> pd.DataFrame:
         table = scraper.find_table(html=html, id="coaches")
 
         # iterate over rows (coaches)
-        coaches = scraper.find_rows(table=table)
+        coaches = scraper.find_all_rows(table=table)
         for coach in coaches:
             # list for coach
             data_coach = list()
@@ -68,10 +125,9 @@ def scrape_coaches(years: list) -> pd.DataFrame:
                 data_coach.append(birth_date)
                 data_coach.append(birth_loc)
                 driver_coach.quit()
-            stats = scraper.find_table_cells(coach)
+            stats = scraper.find_all_table_cells(coach)
             for stat in stats:
                 data_coach.append(stat.text)
-            print(data_coach)
             if data_coach and len(data_coach) > 5:
                 data.append(data_coach)
         driver.quit()
@@ -80,50 +136,129 @@ def scrape_coaches(years: list) -> pd.DataFrame:
     return df
 
 
-# coaches = df.drop_duplicates(subset=["coach_id"])
-# coaches = coaches[
-#     [
-#         "coach_id",
-#         "coach_name",
-#         "games_career",
-#         "wins_career",
-#         "losses_career",
-#         "ties_career",
-#         "playoff_games_career",
-#         "playoff_wins_career",
-#         "playoff_losses_career",
-#     ]
-# ]
-# coach_history = df[
-#     [
-#         "year",
-#         "team_id",
-#         "coach_id",
-#         "games",
-#         "wins",
-#         "losses",
-#         "ties",
-#         "playoff_games",
-#         "playoff_losses",
-#         "remark",
-#     ]
-# ]
+def scrape_coaches(years: list) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    """
+    Scrape coach data from
+    https://www.pro-football-reference.com/years/{year}/coaches.htm
+    and put into SQL database format DataFrames
 
-# coach_team = df.drop_duplicates(subset=["team_id", "coach_id"])
-# coach_team = coach_team[
-#     [
-#         "team_id",
-#         "coach_id",
-#         "games_with_team",
-#         "wins_with_team",
-#         "losses_with_team",
-#         "ties_with_team",
-#         "playoff_games_team",
-#         "playoff_wins_team",
-#         "playoff_losses_team"
-#     ]
-# ]
+    Parameters
+    ----------
+    years: list
+        list of years to scrape data for
 
+    Returns
+    -------
+    DataFrame:
+        coach_id: str
+            coaches pro football reference id
+        coach_name: str
+            coaches name
+        games_career: int
+            number of games in coaching career
+        wins_career: int
+            number of wins in coaching career
+        losses_career
+            number of losses in coaching career
+        ties_career: int
+            number of ties in coaching career
+        playoff_games_career: int
+            number of playoff games in coaching career
+        playoff_wins_career: int
+            number of playoff wins in coaching career
+        playoff_losses_career: int
+            number of playoff losses in coaching career
+    DataFrame:
+        year: int
+            season year
+        team_id: str
+            teams pro football reference id
+        coach_id: str
+            coaches pro football reference id
+        games: int
+            number of games that season
+        wins: int
+            number of wins that season
+        losses: int
+            number of losses that season
+        ties: int
+            number of ties that season
+        playoff_games: int
+            number of playoff games that season
+        playoff_wins: int
+            number of playoff wins that season
+        playoff_losses: int
+            number of playoff losses that season
+        remark: str
+            comment
+    DataFrame:
+        team_id: st
+            teams pro football reference id
+        coach_id: str
+            coaches pro football reference id
+        games_with_team: int
+            number of games whit that team
+        wins_with_team: int
+            number of wins with that team
+        losses_with_team: int
+            number of losses with that team
+        ties_with_team: int
+            number of ties with that team
+        playoff_games_team: int
+            number of playoffs games with that team
+        playoff_wins_team: int
+            number of playoff wins with that team
+        playoff_losses_team: int
+            number of playoff losses with that team
+    """
+    df = scrape_data(years=years)
 
-# # write df
-# df.to_excel(f"coaches.xlsx", index=False)
+    # coaches mapping table
+    coaches = df.drop_duplicates(subset=["coach_id"])
+    coaches = coaches[
+        [
+            "coach_id",
+            "coach_name",
+            "games_career",
+            "wins_career",
+            "losses_career",
+            "ties_career",
+            "playoff_games_career",
+            "playoff_wins_career",
+            "playoff_losses_career",
+        ]
+    ]
+
+    # coach history per season table
+    coach_history = df[
+        [
+            "year",
+            "team_id",
+            "coach_id",
+            "games",
+            "wins",
+            "losses",
+            "ties",
+            "playoff_games",
+            "playoff_wins",
+            "playoff_losses",
+            "remark",
+        ]
+    ]
+
+    # coach history per team coached
+    coach_team = df.drop_duplicates(subset=["team_id", "coach_id"])
+    coach_team = coach_team[
+        [
+            "team_id",
+            "coach_id",
+            "games_with_team",
+            "wins_with_team",
+            "losses_with_team",
+            "ties_with_team",
+            "playoff_games_team",
+            "playoff_wins_team",
+            "playoff_losses_team",
+        ]
+    ]
+    return coaches, coach_history, coach_team

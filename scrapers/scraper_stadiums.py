@@ -1,102 +1,182 @@
-from bs4 import BeautifulSoup
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException
-
 import pandas as pd
+import fantasy_football.utils.header_mapping as header_mapping
+import fantasy_football.utils.logging as logging
+import fantasy_football.scrapers.scraper as scraper
+from typing import Tuple
 
-# options for selenium - don't show window and don't log information
-options = Options()
-options.add_argument("--headless")
-options.add_argument("--log-level=3")
 
-# header for final DataFrame
-header = [
-    "Stadium_Name",
-    "From",
-    "To",
-    "G",
-    "City",
-    "State",
-    "Primary_Team",
-    "Street",
-    "Surface",
-    "Super_Bowls",
-]
+def scrape_data() -> pd.DataFrame:
+    """
+    Scrape stadium data from
+    https://www.pro-football-reference.com/stadiums/
 
-# website to scrape data from
-website = "https://www.pro-football-reference.com/stadiums/"
+    Returns
+    -------
+    DataFrame:
+        stadium_id: str
+            stadiums pro football reference id
+        stadium_name: str
+            name of stadium
+        from: int
+            year of first game in stadium
+        to: int
+            year of last game in stadium
+        games: int
+            number of games in stadium
+        city: str
+            city of stadium
+        state: str
+            state of stadium
+        primary_team: str
+            primary team/ user of stadium
+        street: str
+            street of stadium
+        surface: str
+            surface of stadium with years
+        super_bowls: str
+            super bowls played in stadium
+    """
+    # list for final DataFrame
+    data = list()
 
-# selenium driver - only load for 2 seconds
-driver = webdriver.Chrome(options=options)
-driver.set_page_load_timeout(2)
-try:
-    driver.get(website)
-except TimeoutException:
-    driver.execute_script("window.stop();")
+    # website to scrape data from
+    website = "https://www.pro-football-reference.com/stadiums/"
 
-# import HTML of webpage into python
-soup = BeautifulSoup(driver.page_source, "lxml")
+    # selenium driver
+    driver = scraper.get_driver(website=website)
 
-# get stadium table
-table = soup.find("table", id="stadiums")
+    # import HTML of webpage into python
+    html = scraper.get_html(driver=driver)
 
-# list for final DataFrame
-data = list()
+    # get stadium table
+    table = scraper.find_table(html=html, id="stadiums")
 
-# iterate over rows (stadiums)
-stadiums = table.find_all("tr")
-for stadium in stadiums:
-    # list for stadium
-    data_stadium = list()
-    super_bowls = None
-
-    # stadium name - first column (is th)
-    stadium_name = stadium.find("th").text
-    data_stadium.append(stadium_name)
-
-    # open stadium specific website to scrape information
-    href = stadium.find("a", href=True)
-    if href:
-        # stadium website
-        stadium_href = website + href["href"][10:]
-        driver_stadium = webdriver.Chrome(options=options)
-        driver_stadium.set_page_load_timeout(2)
-        try:
-            driver_stadium.get(stadium_href)
-        except TimeoutException:
-            driver_stadium.execute_script("window.stop();")
-        soup_stadium = BeautifulSoup(driver_stadium.page_source, "lxml")
-        info = soup_stadium.find("div", id="info")
-        meta = info.find("div", id="meta")
-        ps = meta.find_all("p")
-        # street information
-        street = ps[0].text
-        # get surface and super bowl information
-        for p in ps:
-            if p.text[:8] == "Surfaces":
-                surface = p.text.split(":")[1].strip()
-            elif p.text[:11] == "Super Bowls":
-                super_bowls = p.text.split(":")[1].strip()
-        driver_stadium.quit()
-    else:
-        street = None
-        surface = None
+    # iterate over rows (stadiums)
+    stadiums = scraper.find_all_rows(table=table)
+    for stadium in stadiums:
+        # list for stadium
+        data_stadium = list()
         super_bowls = None
-    stats = stadium.find_all("td")
-    for stat in stats:
-        data_stadium.append(stat.text)
-    data_stadium.append(street)
-    data_stadium.append(surface)
-    data_stadium.append(super_bowls)
-    if data_stadium and len(data_stadium) > 5:
-        data.append(data_stadium)
 
-driver.quit()
+        # stadium name - first column (is th)
+        stadium_th = scraper.find_table_header(table=stadium)
+        stadium_name = stadium_th.text
+        href = scraper.find_href(stadium_th)
+        # open stadium specific website to scrape information
+        logging.log(stadium_name)
+        if href:
+            # stadium id is his hyperlink handle
+            stadium_id = href["href"][10:-4]
+            data_stadium.append(stadium_id)
+            data_stadium.append(stadium_name)
+            stadium_href = (
+                f"https://www.pro-football-reference.com/stadiums/{stadium_id}.htm"
+            )
+            driver_stadium = scraper.get_driver(website=stadium_href, load_timeout=6)
+            html_stadium = scraper.get_html(driver=driver_stadium)
+            info = scraper.find_div(html=html_stadium, id="info")
+            meta = scraper.find_div(html=info, id="meta")
+            ps = scraper.find_all_p(meta)
+            # street information
+            street = ps[0].text
+            # get surface and super bowl information
+            for p in ps:
+                if p.text[:8] == "Surfaces":
+                    surface = p.text.split(":")[1].strip()
+                elif p.text[:11] == "Super Bowls":
+                    super_bowls = p.text.split(":")[1].strip()
+            driver_stadium.quit()
+        else:
+            street = None
+            surface = None
+            super_bowls = None
+        stats = scraper.find_all_table_cells(stadium)
+        for stat in stats:
+            data_stadium.append(stat.text)
+        data_stadium.append(street)
+        data_stadium.append(surface)
+        data_stadium.append(super_bowls)
+        if data_stadium and len(data_stadium) > 5:
+            data.append(data_stadium)
+    driver.quit()
+    df = pd.DataFrame(data=data, columns=header_mapping.header_stadiums)
+    return df
 
-# write df
-df = pd.DataFrame(data=data, columns=header)
-df.to_excel(f"stadiums.xlsx", index=False)
+
+def scrape_stadiums() -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    """
+    Scrape stadium data from
+    https://www.pro-football-reference.com/stadiums/
+    and put into SQL database format DataFrames
+
+    Returns
+    -------
+    DataFrame:
+        stadium_id: str
+            stadiums pro football reference id
+        stadium_name: str
+            name of stadium
+        from: int
+            year of first game in stadium
+        to: int
+            year of last game in stadium
+        games: int
+            number of games in stadium
+        city: str
+            city of stadium
+        state: str
+            state of stadium
+        street: str
+            street of stadium
+    DataFrame:
+        stadium_id: str
+            stadiums pro football reference id
+        year: int
+            seasons year
+        surface: str
+            surface of stadium
+    DataFrame:
+        super_bowl_id: str
+            roman year of superbowl
+        stadium_id: str
+            stadiums pro football reference id
+    """
+    # df = scrape_data()
+    df = pd.read_excel("stadiums_all.xlsx")
+
+    # stadium mapping table
+    stadiums = df[
+        ["stadium_id", "stadium_name", "from", "to", "games", "city", "state", "street"]
+    ]
+
+    data_surface = list()
+    for i, row in df[["stadium_id", "surface"]].iterrows():
+        stadium_id = row["stadium_id"]
+        surface = row["surface"]
+        if not pd.isna(surface):
+            surface = surface.split(",")
+            for surf in surface:
+                s_split = surf.split("(")
+                surface_type = s_split[0].strip()
+                years = s_split[1][:-1].split("-")
+                if len(years) == 1:
+                    data_surface.append([stadium_id, years[0], surface_type])
+                else:
+                    for y in range(int(years[0]), int(years[1]) + 1):
+                        data_surface.append([stadium_id, y, surface_type])
+
+    surface_history = pd.DataFrame(
+        data_surface, columns=["stadium_id", "year", "surface"]
+    )
+
+    data_sb = list()
+    for i, row in df[["stadium_id", "super_bowls"]].iterrows():
+        stadium_id = row["stadium_id"]
+        super_bowls = row["super_bowls"]
+        if not pd.isna(super_bowls):
+            sb_games = super_bowls.split(",")
+            for sb in sb_games:
+                data_sb.append([sb, stadium_id])
+
+    super_bowl_history = pd.DataFrame(data_sb, columns=["super_bowl_id", "stadium_id"])
+    return stadiums, surface_history, super_bowl_history

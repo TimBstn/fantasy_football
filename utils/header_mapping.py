@@ -1,4 +1,4 @@
-# header for final DataFrame
+# header for coaches
 header_coaches = [
     "year",
     "coach_id",
@@ -28,4 +28,19 @@ header_coaches = [
     "playoff_wins_career",
     "playoff_losses_career",
     "remark",
+]
+
+# header for stadiums
+header_stadiums = [
+    "stadium_id",
+    "stadium_name",
+    "from",
+    "to",
+    "games",
+    "city",
+    "state",
+    "primary_team",
+    "street",
+    "surface",
+    "super_bowls",
 ]
