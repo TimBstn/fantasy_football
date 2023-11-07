@@ -267,7 +267,6 @@ header_drives = [
     "drives",
     "plays",
     "pct_drives_ending_score",
-    "pct_drives_ending_touchdown",
     "pct_drives_ending_turnover",
     "plays_avg",
     "yards_avg",

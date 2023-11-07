@@ -439,8 +439,6 @@ def scrape_offense(
             total number of plays (rush, pass, penalty)
         pct_drives_ending_score: float
             percent of drives ending in score
-        pct_drives_ending_touchdown: float
-            percent of drives ending in touchdown
         pct_drives_ending_turnover: float
             percent of drives ending in turnover
         plays_avg: float
