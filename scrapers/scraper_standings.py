@@ -151,7 +151,9 @@ def scrape_data(years: list) -> pd.DataFrame:
     return df
 
 
-def scrape_standings(years: list) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+def scrape_standings(
+    years: list,
+) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """
     Scrape coach data from
     https://www.pro-football-reference.com/years/{year}/coaches.htm
@@ -167,12 +169,15 @@ def scrape_standings(years: list) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFr
     DataFrame:
         team_id: str
             teams pro football reference id
-        team_name: str
-            teams name
         division_id: str
             id of division
-        active: bool
-            team is active
+    DataFrame:
+        year: int
+            season year
+        team_id: str
+            teams pro football reference id
+        team_name: str
+            teams name
     DataFrame:
         division_id: str
             id of division
@@ -219,12 +224,14 @@ def scrape_standings(years: list) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFr
         defensive_SRS: float
             team defense quality relative to average (0.0)
     """
-    # df = scrape_data(years=years)
-    df = pd.read_excel("standings_all.xlsx")
+    df = scrape_data(years=years)
 
     # teams table
-    teams = df[["team_id", "team_name", "division_id"]]
+    teams = df[["team_id", "division_id"]]
     teams = teams.drop_duplicates(subset=["team_id"], keep="last")
+
+    # team history table
+    team_history = df[["year", "team_id", "team_name"]]
 
     # division table
     division = df[["division_id", "division"]]
@@ -254,4 +261,4 @@ def scrape_standings(years: list) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFr
             "defensive_SRS",
         ]
     ]
-    return teams, division, standings_history
+    return teams, team_history, division, standings_history
