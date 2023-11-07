@@ -44,3 +44,28 @@ header_stadiums = [
     "surface",
     "super_bowls",
 ]
+
+# header team standings
+header_standings = [
+    "year",
+    "team_id",
+    "team_name",
+    "division_id",
+    "division",
+    "odds_super_bowl",
+    "odds_wins",
+    "expected_wins",
+    "expected_losses",
+    "wins",
+    "losses",
+    "ties",
+    "win_pct",
+    "points_for",
+    "points_against",
+    "points_diffential",
+    "margin_of_victory",
+    "strength_of_schedule",
+    "simple_rating_system",
+    "offensive_SRS",
+    "defensive_SRS",
+]

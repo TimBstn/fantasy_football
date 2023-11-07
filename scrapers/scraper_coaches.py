@@ -98,7 +98,7 @@ def scrape_data(years: list) -> pd.DataFrame:
             data_coach = list()
             data_coach.append(year)
 
-            # stadium name - first column (is th)
+            # coach name - first column (is th)
             coach_th = scraper.find_table_header(table=coach)
             coach_name = coach_th.text
             href = scraper.find_href(coach_th)
