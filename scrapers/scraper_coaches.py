@@ -126,8 +126,16 @@ def scrape_data(years: list) -> pd.DataFrame:
                 data_coach.append(birth_loc)
                 driver_coach.quit()
             stats = scraper.find_all_table_cells(coach)
-            for stat in stats:
-                data_coach.append(stat.text)
+            for i, stat in enumerate(stats):
+                if i == 0:
+                    href_team = scraper.find_href(stat)
+                    if href_team:
+                        team_id = href_team["href"][7:10]
+                    else:
+                        team_id = None
+                    data_coach.append(team_id)
+                else:
+                    data_coach.append(stat.text)
             if data_coach and len(data_coach) > 5:
                 data.append(data_coach)
         driver.quit()
