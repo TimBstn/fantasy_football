@@ -7,8 +7,8 @@ from typing import Tuple
 
 def scrape_data(years: list, table_id: str, headers: list) -> pd.DataFrame:
     """
-    Scrape team offense data from
-    https://www.pro-football-reference.com/years/{year}/
+    Scrape team defense data from
+    https://www.pro-football-reference.com/years/{year}/opp.htm
 
     Parameters
     ----------
@@ -28,7 +28,7 @@ def scrape_data(years: list, table_id: str, headers: list) -> pd.DataFrame:
     for year in years:
         logging.log(str(year))
         # website to scrape data from
-        website = f"https://www.pro-football-reference.com/years/{year}/"
+        website = f"https://www.pro-football-reference.com/years/{year}/opp.htm"
 
         # selenium driver
         driver = scraper.get_driver(website=website)
@@ -72,7 +72,7 @@ def scrape_data(years: list, table_id: str, headers: list) -> pd.DataFrame:
     return df
 
 
-def scrape_offense(
+def scrape_defense(
     years: list,
 ) -> Tuple[
     pd.DataFrame,
@@ -87,7 +87,7 @@ def scrape_offense(
 ]:
     """
     Scrape offense data from
-    https://www.pro-football-reference.com/years/{year}/
+    https://www.pro-football-reference.com/years/{year}/opp.htm
     and put into SQL database format DataFrames
 
     Parameters
@@ -101,35 +101,35 @@ def scrape_offense(
         year: int
             season year
         rank: int
-            offensive rank
+            defensive rank
         team_id: str
             teams pro football reference id
         games: int
             number of games that season
         points_for: int
-            points scored by team
+            points scored by opponent
         total_yards: int
-            total offensive yards
+            total offensive yards by opponent
         offensive_plays: int
             offensive plays = pass attempts + rush attempts + sacks
         yards_per_play: float
             yards per offensive play = (rush yards + pass yards) / offensive plays
-        turnovers_lost: int
-            total number of turnovers lost
-        fumbles_lost: int
+        takeaways: int
+            total number of takeovers
+        fumbles_won: int
             total number of fumbles lost
         first_downs: int
-            total number of first downs
+            total number of first downs by opponent
         passes_completed: int
-            passes completed
+            passes completed by opponent
         passes_attempted: int
-            passes attempted
+            passes attempts by opponent
         yards_passing: int
             yards gained by passing
         touchdowns_passing: int
             passing touchdowns
         interceptions: int
-            interceptions thrown
+            interceptions caught
         net_yards_gained_per_pass: float
             net yards gained per pass attempt
         first_downs_passing: int
@@ -144,11 +144,11 @@ def scrape_offense(
             rushing yards gained
         first_downs_rushing: int
             total number of first downs by rushing
-        penalties_opponent: int
+        penalties_commited: int
             penalties commited by opponents defense
-        yards_penalties_opponent: int
+        yards_penalties_commited: int
             yards gained by penalties opponent
-        first_downs_penalties_opponent: int
+        first_downs_penalties_commited: int
             total number of first downs by penalties opponents
         pct_drives_ending_score: float
             percent of drives ending in score
@@ -211,15 +211,15 @@ def scrape_offense(
         games: int
             number of games that season
         passes_completed: int
-            passes completed
+            passes completed by opponent
         passes_attempted: int
-            passes attempts
+            passes attempted by opponent
         completion_pct: float
             percentage of passes completed
         yards_passing: int
-            yards gained by passing
+            yards gained by passing by opponent
         touchdowns_passing: int
-            passing touchdowns
+            passing touchdowns by opponent
         touchdown_pct: float
             percentage of touchdowns thrown when attempting to pass
         interceptions: int
@@ -452,43 +452,41 @@ def scrape_offense(
         points_avg: float
             average number of points per drive
     """
-    total_offense = scrape_data(
-        years=years, table_id="team_stats", headers=header_mapping.header_offense
+    total_defense = scrape_data(
+        years=years, table_id="team_stats", headers=header_mapping.header_defense
     )
-    scoring_offense = scrape_data(
-        years=years, table_id="team_scoring", headers=header_mapping.header_scoring
-    )
-    passing_offense = scrape_data(
+    # scoring_offense = scrape_data(
+    #     years=years, table_id="team_scoring", headers=header_mapping.header_scoring
+    # )
+    passing_defense = scrape_data(
         years=years, table_id="passing", headers=header_mapping.header_passing
     )
-    rushing_offense = scrape_data(
-        years=years, table_id="rushing", headers=header_mapping.header_rushing
-    )
-    returning_offense = scrape_data(
-        years=years, table_id="returns", headers=header_mapping.header_returns
-    )
-    kicking_offense = scrape_data(
-        years=years, table_id="kicking", headers=header_mapping.header_kicking
-    )
-    punting_offense = scrape_data(
-        years=years, table_id="punting", headers=header_mapping.header_punting
-    )
-    conversion_offense = scrape_data(
-        years=years,
-        table_id="team_conversions",
-        headers=header_mapping.header_conversion,
-    )
-    driving_offense = scrape_data(
-        years=years, table_id="drives", headers=header_mapping.header_drives
-    )
-    return (
-        total_offense,
-        scoring_offense,
-        passing_offense,
-        rushing_offense,
-        returning_offense,
-        kicking_offense,
-        punting_offense,
-        conversion_offense,
-        driving_offense,
-    )
+    # rushing_offense = scrape_data(
+    #     years=years, table_id="rushing", headers=header_mapping.header_rushing
+    # )
+    # returning_offense = scrape_data(
+    #     years=years, table_id="returns", headers=header_mapping.header_returns
+    # )
+    # kicking_offense = scrape_data(
+    #     years=years, table_id="kicking", headers=header_mapping.header_kicking
+    # )
+    # punting_offense = scrape_data(
+    #     years=years, table_id="punting", headers=header_mapping.header_punting
+    # )
+    # conversion_offense = scrape_data(
+    #     years=years,
+    #     table_id="team_conversions",
+    #     headers=header_mapping.header_conversion,
+    # )
+    # driving_offense = scrape_data(
+    #     years=years, table_id="drives", headers=header_mapping.header_drives
+    # )
+    return total_defense, passing_defense
+        # scoring_offense,
+        # rushing_offense,
+        # returning_offense,
+        # kicking_offense,
+        # punting_offense,
+        # conversion_offense,
+        # driving_offense,
+    
