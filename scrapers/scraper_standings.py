@@ -102,8 +102,8 @@ def scrape_data(years: list) -> pd.DataFrame:
                     team_name = None
                 if href:
                     # coach id is his hyperlink handle
-                    team_id = href["href"][7:10]
-                    data_team.append(team_id.upper())
+                    team_id = href["href"][7:10].upper()
+                    data_team.append(team_id)
                     data_team.append(team_name)
                     team_href = f"https://www.pro-football-reference.com/teams/{team_id}/{year}.htm"
                     driver_team = scraper.get_driver(website=team_href, load_timeout=6)

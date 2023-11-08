@@ -74,7 +74,7 @@ def scrape_data(years: list) -> pd.DataFrame:
                 else:
                     team_name = None
                 if href:
-                    team_id = href["href"][7:10]
+                    team_id = href["href"][7:10].upper()
                 else:
                     team_id = None
                 data_team.append(team_id)

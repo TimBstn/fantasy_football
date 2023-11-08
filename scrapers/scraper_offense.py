@@ -56,7 +56,7 @@ def scrape_data(years: list, table_id: str, headers: list) -> pd.DataFrame:
                 if i == 0:
                     href_team = scraper.find_href(stat)
                     if href_team:
-                        team_id = href_team["href"][7:10]
+                        team_id = href_team["href"][7:10].upper()
                     else:
                         team_id = None
                     data_team.append(team_id)

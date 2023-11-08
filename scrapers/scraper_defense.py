@@ -56,7 +56,7 @@ def scrape_data(years: list, table_id: str, headers: list) -> pd.DataFrame:
                 if i == 0:
                     href_team = scraper.find_href(stat)
                     if href_team:
-                        team_id = href_team["href"][7:10]
+                        team_id = href_team["href"][7:10].upper()
                     else:
                         team_id = None
                     data_team.append(team_id)
@@ -155,7 +155,7 @@ def scrape_defense(
         pct_drives_ending_turnover:
             percent of drives ending in turnover
         expected_point_contr: float
-            expected points contributed by total offense
+            expected points contributed by total defense
     DataFrame:
         year: int
             season year
@@ -166,41 +166,41 @@ def scrape_defense(
         games: int
             number of games that season
         touchdowns_rushing: int
-            rushing touchdowns
+            rushing touchdowns by opponent
         touchdowns_passing: int
-            passing touchdowns
+            passing touchdowns by opponent
         touchdowns_punt_returns: int
-            touchdowns from punt returns
+            touchdowns from punt returns by opponent
         touchdowns_kickoff_returns: int
-            touchdowns from kickoff returns
+            touchdowns from kickoff returns by opponent
         touchdowns_fumbles: int
-            touchdowns from fumble returns
+            touchdowns from fumble returns by opponent
         touchdowns_interceptions: int
-            touchdowns from interceptions
+            touchdowns from interceptions by opponent
         touchdowns_other: int
-            other touchdowns, p.e. blocked kicks or missed fieldgoals
+            other touchdowns, p.e. blocked kicks or missed fieldgoals by opponent
         total_touchdowns: int
-            total touchdowns
+            total touchdowns by opponent
         two_points_made: int
-            two point attempts made
+            two point attempts made by opponent
         two_points_attempted: int
-            two point attempts attempted
+            two point attempts attempted by opponent
         defensive_two_points_made: int
-            defensive two points made
+            defensive two points made by opponent
         extra_points_made: int
-            extra points made
+            extra points made by opponent by opponent
         extra_points_attempted: int
-            extra points attempted
+            extra points attempted by opponent
         field_goals_made: int
-            field goals made
+            field goals made by opponent
         field_goals_attempted: int
-            field goals attempted
+            field goals attempted by opponent
         safeties: int
-            safeties scored
+            safeties scored by opponent
         total_points: int
-            total points scored
+            total points scored by opponent
         points_per_game: float
-            points per game scored
+            points per game scored by opponent
     DataFrame:
         year: int
             season year
@@ -223,11 +223,11 @@ def scrape_defense(
         touchdown_pct: float
             percentage of touchdowns thrown when attempting to pass
         interceptions: int
-            interceptions thrown
+            interceptions caught
+        passes_defended: int
+            passed defended by defensive player
         interception_pct: float
             percentage of interceptions thrown when attempting to pass
-        longest_pass: int
-            longest completed pass thrown
         yards_gained_per_pass: float
             yards gained per pass attempt
         adjusted_yards_gained_per_pass: float
@@ -242,7 +242,11 @@ def scrape_defense(
         sacks: int
             times sacked
         sacks_yards: int
-            yards lost due to sacks
+            yards won due to sacks
+        qb_hits: int
+            quarterback hits
+        tackles_for_loss: int
+            tackles for loss
         sack_pct: float
             percentage of times sacked when attempting to pass
         net_yards_gained_per_pass: float
@@ -251,12 +255,8 @@ def scrape_defense(
             net yards gained per pass attempt
             (passing yards - sack yards + 20 * passing touchdown - 45 * interception)
                 / (passes attempted + sacks)
-        fourth_quarter_comebacks: int
-            fourth quarter comeback
-        game_winning_drives: int
-            game winning drives (included OT)
         expected_point_contr: float
-            expected points contributed by passing offense
+            expected points contributed by passing defense
     DataFrame:
         year: int
             season year
@@ -267,21 +267,17 @@ def scrape_defense(
         games: int
             number of games that season
         rushing_attempted: int
-            rushing attempts
+            rushing attempts by opponent
         yards_rushing: int
             yards gained by rushing
         touchdowns_rushing: int
             rushing touchdowns
-        longest_rush: int
-            longest rush
         rushing_yards_per_attempt: float
             rushing yards gained per attempt
         rushing_yards_per_game: float
             rushing yards gained per game
-        fumbles_total: int
-            total number of fumbles
         expected_point_contr: float
-            expected points contributed by rushing offense
+            expected points contributed by rushing defense
     DataFrame:
         year: int
             season year
@@ -297,8 +293,6 @@ def scrape_defense(
             yards from punt returns
         punt_return_touchdowns: int
             touchdowns from punt returns
-        longest_punt_return: int
-            longest punt return
         yards_per_punt_return: float
             averge yards per punt return
         kickoffs_returned: int
@@ -307,12 +301,8 @@ def scrape_defense(
             yards from kickoff returns
         kickoff_return_touchdowns: int
             touchdowns from kickoff returns
-        longest_kickoff_return: int
-            longest kickoff return
         yards_per_kickoff_return: float
             averge yards per kickoff return
-        all_purpose_yards: int
-            yards from ryshing, receiving, kick, punt, interceptions, fumble return
     DataFrame:
         year: int
             season year
@@ -322,50 +312,18 @@ def scrape_defense(
             teams pro football reference id
         games: int
             number of games that season
-        field_goals_attempted_0_19: int
-            field goals attempted 19 yards and under
-        field_goals_made_0_19: int
-            field goals made 19 yards and under
-        field_goals_attempted_20_29: int
-            field goals attempted 20-29 yards
-        field_goals_made_20_29: int
-            field goals made 20-29 yards
-        field_goals_attempted_30_39: int
-            field goals attempted 30-39 yards
-        field_goals_made_30_39: int
-            field goals made 30-39 yards
-        field_goals_attempted_40_49: int
-            field goals attempted 40-49 yards
-        field_goals_made_40_49: int
-            field goals made 40-49 yards
-        field_goals_attempted_50_plus: int
-            field goals attempted 50 yards and more
-        field_goals_made_50_plus: int
-            field goals made 50 yards and more
         field_goals_attempted: int
-            field goals attempted
+            field goals attempted by opponent
         field_goals_made: int
-            field goals made
-        longest_field_goal: int
-            yards of longest field goal
+            field goals made by opponent
         field_goal_pct: float
             percentage of field goals made
         extra_points_attempted: int
-            extra points attempted
+            extra points attempted by opponent
         extra_points_made: int
-            extra points made
+            extra points made by opponent
         extra_points_pct: float
             extra point percentage
-        kickoffs: int
-            number of kickoffs
-        kickoff_yards: int
-            kickoff yards
-        kickoff_touchbacks: int
-            number of kickoff touchbacks
-        touchback_pct: float
-            percentage of touchbacks
-        kickoff_avg_yards: float
-            average yards of kickoff
     DataFrame:
         year: int
             season year
@@ -381,22 +339,6 @@ def scrape_defense(
             total yards punts
         punts_avg_yards: float
             average yard per punt
-        punt_return_yards_opponent: int
-            punt return yards of opponent
-        punt_net_yards: int
-            punt net yards = punt yards - opponent returns - 20 * touchback
-        punt_net_yards_per_punt: float
-            ount net yards per punt including blocks
-        longest_punt: int
-            longest punt
-        punts_touchback: int
-            total number of touchbacks
-        punts_touchback_pct: float
-            percentage of punts resulting in touchback
-        punts_inside_20: int
-            punts inside opponent's 20 yard line
-        punts_inside_20_pct: float
-            percentage of punts downed inside opponent's 20 yard lone
         punts_blocked: int
             times punt blocked
     DataFrame:
@@ -409,21 +351,21 @@ def scrape_defense(
         games: int
             number of games that season
         third_downs_attempted: int
-            total number of third down attempts
+            total number of third down attempts by opponent
         third_downs_converted: int
-            total number of third down converted
+            total number of third down converted by opponent
         third_down_conversion_pct: float
             third down conversion percentage
         fourth_downs_attempted: int
-            total number of fourth down attempts
+            total number of fourth down attempts by opponent
         fourth_downs_converted: int
-            total number of fourth down converted
+            total number of fourth down converted by opponent
         fourth_down_conversion_pct: float
             fourth down conversion percentage
         red_zones_attempted: int
-            total number of red zone attempts
+            total number of red zone attempts by opponent
         red_zones_converted: int
-            total number of red zone attempts converted to touchdown
+            total number of red zone attempts converted to touchdown by opponent
         red_zone_conversion_pct: float
             red zone to touchdown conversion percentage
     DataFrame:
@@ -436,7 +378,7 @@ def scrape_defense(
         games: int
             number of games that season
         plays: int
-            total number of plays (rush, pass, penalty)
+            total number of plays (rush, pass, penalty) by opponent
         pct_drives_ending_score: float
             percent of drives ending in score
         pct_drives_ending_turnover: float
@@ -455,38 +397,42 @@ def scrape_defense(
     total_defense = scrape_data(
         years=years, table_id="team_stats", headers=header_mapping.header_defense
     )
-    # scoring_offense = scrape_data(
-    #     years=years, table_id="team_scoring", headers=header_mapping.header_scoring
-    # )
-    passing_defense = scrape_data(
-        years=years, table_id="passing", headers=header_mapping.header_passing
+    scoring_defense = scrape_data(
+        years=years,
+        table_id="team_scoring",
+        headers=header_mapping.header_scoring_defense,
     )
-    # rushing_offense = scrape_data(
-    #     years=years, table_id="rushing", headers=header_mapping.header_rushing
-    # )
-    # returning_offense = scrape_data(
-    #     years=years, table_id="returns", headers=header_mapping.header_returns
-    # )
-    # kicking_offense = scrape_data(
-    #     years=years, table_id="kicking", headers=header_mapping.header_kicking
-    # )
-    # punting_offense = scrape_data(
-    #     years=years, table_id="punting", headers=header_mapping.header_punting
-    # )
-    # conversion_offense = scrape_data(
-    #     years=years,
-    #     table_id="team_conversions",
-    #     headers=header_mapping.header_conversion,
-    # )
-    # driving_offense = scrape_data(
-    #     years=years, table_id="drives", headers=header_mapping.header_drives
-    # )
-    return total_defense, passing_defense
-        # scoring_offense,
-        # rushing_offense,
-        # returning_offense,
-        # kicking_offense,
-        # punting_offense,
-        # conversion_offense,
-        # driving_offense,
-    
+    passing_defense = scrape_data(
+        years=years, table_id="passing", headers=header_mapping.header_passing_defense
+    )
+    rushing_defense = scrape_data(
+        years=years, table_id="rushing", headers=header_mapping.header_rushing_defense
+    )
+    returning_defense = scrape_data(
+        years=years, table_id="returns", headers=header_mapping.header_returns_defense
+    )
+    kicking_defense = scrape_data(
+        years=years, table_id="kicking", headers=header_mapping.header_kicking_defense
+    )
+    punting_defense = scrape_data(
+        years=years, table_id="punting", headers=header_mapping.header_punting_defense
+    )
+    conversion_defense = scrape_data(
+        years=years,
+        table_id="team_conversions",
+        headers=header_mapping.header_conversion_defense,
+    )
+    driving_defense = scrape_data(
+        years=years, table_id="drives", headers=header_mapping.header_drives_defense
+    )
+    return (
+        total_defense,
+        scoring_defense,
+        passing_defense,
+        rushing_defense,
+        returning_defense,
+        kicking_defense,
+        punting_defense,
+        conversion_defense,
+        driving_defense,
+    )
