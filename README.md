@@ -1,12 +1,16 @@
-# Fantasy Football - Use Machine Learning to predict future performance 
+# FootStatsPro: Football Data Mining and Playoff Predictive Analytics
 
-Fantasy football has become a widely popular and engaging pastime, with millions of participants worldwide. Accurate prediction of player performance and points is crucial for fantasy football enthusiasts to make informed decisions when selecting their fantasy teams. This project addresses the problem of predicting fantasy football points using machine learning techniques, specifically focusing on regression and neural networks.
+This project presents a rigorous statistical analysis of the factors influencing National Football League (NFL) team qualification for the playoffs, leveraging a comprehensive database encompassing end-of-season offense, defense, kicking, punting, and special teams statistics. The study employs a multifaceted approach, utilizing statistical tests such as p-values, chi-square tests, and Principal Component Analysis (PCA) to identify and extract the most influential factors affecting playoff outcomes.
 
-In this project, we employ a comprehensive dataset of historical player statistics, encompassing variables such as player attributes, team dynamics, and previous performance. We explore the performance of two primary machine learning methodologies: multiple linear regression and artificial neural networks. Our analysis involves feature engineering and selection to enhance the predictive power of the models.
+The research delves into both offensive and defensive dimensions, unraveling the intricate interplay between various performance metrics and postseason success. Through systematic examination and hypothesis testing, the study aims to contribute valuable insights into the nuanced dynamics that separate playoff-bound teams from those falling short.
 
-We evaluate the effectiveness of these techniques by considering metrics such as Mean Absolute Error (MAE), Root Mean Square Error (RMSE), and R-squared. Additionally, we investigate the potential of model interpretability, enabling fantasy football enthusiasts to gain insights into the factors influencing player performance predictions.
+Key objectives include identifying statistically significant indicators and elucidating their impact on playoff qualification. By employing PCA, the paper seeks to distill complex datasets into their essential components, offering a clearer understanding of the critical variables at play. This research not only sheds light on the relative importance of different offensive and defensive metrics but also provides a holistic perspective on the role of special teams and kicking in determining playoff success.
 
-The results of our experiments demonstrate the comparative strengths and weaknesses of regression and neural networks in predicting fantasy football points. We also discuss the implications of our findings for fantasy football enthusiasts and researchers in the field of sports analytics. This prject serves as a valuable reference for those seeking to leverage machine learning techniques to gain a competitive edge in the world of fantasy football.
+The findings of this study are expected to provide NFL analysts, coaches, and enthusiasts with actionable insights, enabling more informed decision-making and strategic planning. Furthermore, the methodology employed in this research may serve as a template for similar analyses in other sports contexts, contributing to the broader field of sports analytics.
+
+## Data Dictionary
+
+For a detailed understanding of each column in the dataset, refer to the [Factor Dictionary](factor_dictionary.md), which provides clear explanations for metrics such as total yards, turnovers, passing efficiency, and more. This dictionary serves as a valuable resource for researchers and analysts aiming to unravel the intricacies of NFL team performance.
 
 # Notes
 - prediction is PPR style - explain
@@ -73,7 +77,7 @@ The data structure is displayed in [this database relation diagram](https://dbdi
 - [ ] SportsOddsHistory. (11/2023). Historical NFL Game Odds. https://www.sportsoddshistory.com/nfl-game-odds/
 - [x] Pro Football Reference. (11/2023). NFL Coaches. https://www.pro-football-reference.com/years/2023/coaches.htm
 - [x] Pro Football Reference. (11/2023). NFL, AFL, and AAFC Stadiums. https://www.pro-football-reference.com/stadiums/
-- [ ] Pro Football Reference. (11/2023). NFL Weeks. https://www.pro-football-reference.com/years/2023/games.htm
+- [x] Pro Football Reference. (11/2023). NFL Weeks. https://www.pro-football-reference.com/years/2023/games.htm
 - [x] Pro Football Reference. (11/2023). NFL Standings & Team Stats. https://www.pro-football-reference.com/years/2023/
 
 ## Research
