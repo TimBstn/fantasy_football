@@ -1,10 +1,10 @@
 # FootStatsPro: Football Data Mining and Playoff Predictive Analytics
 
-This project presents a rigorous statistical analysis of the factors influencing National Football League (NFL) team qualification for the playoffs, leveraging a comprehensive database encompassing end-of-season offense, defense, kicking, punting, and special teams statistics. The study employs a multifaceted approach, utilizing statistical tests such as p-values, chi-square tests, and Principal Component Analysis (PCA) to identify and extract the most influential factors affecting playoff outcomes.
+This project presents a rigorous statistical analysis of the factors influencing National Football League (NFL) team qualification for the playoffs, leveraging a comprehensive database encompassing end-of-season offense, defense, kicking, punting, and special teams statistics. The study employs a multifaceted approach, utilizing statistical tests such as t-tests, XGBoost, and Principal Component Analysis (PCA) to identify and extract the most influential factors affecting playoff outcomes.
 
 The research delves into both offensive and defensive dimensions, unraveling the intricate interplay between various performance metrics and postseason success. Through systematic examination and hypothesis testing, the study aims to contribute valuable insights into the nuanced dynamics that separate playoff-bound teams from those falling short.
 
-Key objectives include identifying statistically significant indicators and elucidating their impact on playoff qualification. By employing PCA, the paper seeks to distill complex datasets into their essential components, offering a clearer understanding of the critical variables at play. This research not only sheds light on the relative importance of different offensive and defensive metrics but also provides a holistic perspective on the role of special teams and kicking in determining playoff success.
+Key objectives include identifying statistically significant indicators and elucidating their impact on playoff qualification. By employing PCA and XGBoost, the paper seeks to distill complex datasets into their essential components, offering a clearer understanding of the critical variables at play. This research not only sheds light on the relative importance of different offensive and defensive metrics but also provides a holistic perspective on the role of special teams and kicking in determining playoff success.
 
 The findings of this study are expected to provide NFL analysts, coaches, and enthusiasts with actionable insights, enabling more informed decision-making and strategic planning. Furthermore, the methodology employed in this research may serve as a template for similar analyses in other sports contexts, contributing to the broader field of sports analytics.
 
@@ -12,61 +12,39 @@ The findings of this study are expected to provide NFL analysts, coaches, and en
 
 For a detailed understanding of each column in the dataset, refer to the [Factor Dictionary](factor_dictionary.md), which provides clear explanations for metrics such as total yards, turnovers, passing efficiency, and more. This dictionary serves as a valuable resource for researchers and analysts aiming to unravel the intricacies of NFL team performance.
 
-# Notes
-- prediction is PPR style - explain
-- https://github.com/DelanoDZR/fpl-predictor-neural-nets/blob/main/models.py - models
+## Analytics 
+### t-test
 
-# Prediction
-- use average of last n games
-- for regression: normalize data before predicting
-- opponent record as percentage
-- home/away game?
-- opponents rank defensive, offensive (split by receiving, rushing, total)
-- The Neural Networks are simply given the data set in the original form. Feature selection and
-normalization are not performed. The Neural Network can implicitly do this or not depending on
-whether it improves their predictions. Before applying SVR, I scaled the features down to the interval [0, 1] in order to improve the performance specifically for linear and polynomial kernel SVR.
-After the normalization comes the feature selection. (Lutz 2015)
-- First of all, I filtered the data such that only Quarterbacks
-(QB) with at least 5 passes are selected. This restriction is necessary such that non-QB players or
-backup QBs are not taken in to account.
-- Then, for every game I included as features the current
-age of the QB, his experience in years as a professional, the stats of the previous game, the average
-stats of the last 10 games as well as the stats of the opposing defense in their last game and their
-average over the last 10 games.
-- For
-defenses, there are 4 categories, namely the number of points allowed, passing and rushing yards
-allowed as well as turnovers forced.
-- First-year players become a separate
-problem because the predictions can not be based on their past production. To overcome this, they
-are assigned the average over all first-year QB per-game average stats for the first game. From the
-second game on, their own statistics are used.
-- Therefore it makes sense to restrict the evaluation to the best QBs that
-actually have a chance to be used in Fantasy Football. In standard leagues with 12 teams one QB
-starts for every team, so the evaluation considers the predictions of the 24 best QBs 
--  For reasons of comparability with other sources three different errors are shown: Root Mean Squared Error (RMSE),
-Mean Absolute Error (MAE) and Mean Relative Error (MRE)
-- n. In order to take the trend better into account, the exponentially
-weighted moving average (EWMA) could be used to substitute the current game statistics.
-- There are also several other interesting features that could be taken into account, such as the injury
-report status, suspensions, draft position and college statistics for first-year players, postseason and
-preseason performance, overall team performance and changes on the team such as trades or injuries.
-- factors (Fokoue 2001): In a similar spirit, this paper considers five years (2006-2010) worth of NFL
-end of season statistics, and seek to use data mining and machine learning techniques to
-find out if teams can be automatically classified as good or bad based on those statistics,
-and also identify as much as possible those factors that seem to discriminate between the
-good and the bad teams.
-- use p value as in Fokoue 2001 to select features for linear regression
+In the investigation of factors influencing NFL playoff qualification, a t-test is employed to assess the significance of individual factors related to offense, defense, and special teams. The t-test is a statistical method that evaluates whether the means of two groups, in this case, playoff and non-playoff teams, are significantly different from each other. By calculating the t-statistic and obtaining a p-value, researchers can determine the probability of observing such a difference by random chance alone.
 
-# Next Steps
-- vs divisional opponent, AFC, NFC
-- Projected Points of ESPN
-- Time Series LSTM-RNN model
-- use NLP such as in (Baugham 2021): The paper details a novel machine learning NLP pipeline incorporating statistical entity detectors and deep learning feedforward neural networks with 98 layers for player classification. It achieves a high analogy test accuracy of 100% and keyword test accuracy of 80% using news articles, videos, and expert opinions, while providing player classifications and point projections with low Root Mean Squared Error.
-- create starting lineup (Gupta 2019); "
-Using the points for the past years, time series forecasting techniques were leveraged to predict next year’s performance. To
-be robust in approach and consider both linearity and non-linearity, Autoregressive Integrated Moving Average (ARIMA) and
-Recurrent Neural Networks (RNNs) were considered for modelling. After obtaining the points for the entire roster, Linear
-Programming (LPP) basics were applied to adhere to all constraints and finalise a suitable starting dream team."
+Setting a significance level, or alpha, at 0.05, if the p-value is below this threshold, it indicates that the observed difference is unlikely due to chance, suggesting that the factor may be a meaningful predictor of playoff success.
+
+### Gradient Boosting
+
+Continuing the investigation into the factors impacting NFL playoff qualification, classification using XGBoost is employed to extract the significance of each factor. XGBoost, an advanced machine learning algorithm, allows for a more sophisticated analysis of how offensive, defensive, and special teams metrics collectively contribute to predicting whether a team makes the playoffs or not.
+
+In this approach, XGBoost assigns importance scores to each feature, revealing the relative significance of different factors in determining playoff outcomes. By leveraging the strengths of gradient boosting and decision tree ensembles, XGBoost excels at capturing complex relationships within the data.
+
+This classification technique goes beyond traditional regression methods, providing a predictive model that can identify patterns and interactions among various performance metrics. The importance scores derived from XGBoost shed light on which factors play a pivotal role in distinguishing playoff-bound teams from those that do not qualify. Utilizing XGBoost for classification enhances the depth of analysis, offering valuable insights into the nuanced dynamics that underlie NFL playoff success.
+
+### Principal Component Analysis (PCA)
+In the final stage of our exploration into the factors influencing NFL playoff qualification, Principal Component Analysis (PCA) is employed to distill the significance of each factor. PCA is a dimensionality reduction technique that transforms the original variables, such as offensive, defensive, and special teams metrics, into a set of linearly uncorrelated components.
+
+By applying PCA, we aim to identify the most influential components that contribute to the variability in playoff outcomes. This method allows us to uncover latent patterns and relationships within the data, providing a simplified yet informative representation of the key factors at play.
+
+PCA serves as a valuable tool for feature extraction and dimensionality reduction, offering a unique perspective on the underlying structure of the data. By examining the loadings of each variable on the principal components, we gain insights into which offensive, defensive, and special teams metrics contribute most significantly to the variability in NFL playoff qualification. PCA adds depth to our analysis by revealing the fundamental factors that shape a team's success in securing a coveted playoff spot.
+
+## Analysis
+(Fokoue 2001): In a similar spirit, this paper considers five years (2006-2010) worth of NFL end of season statistics, and seek to use data mining and machine learning techniques to find out if teams can be automatically classified as good or bad based on those statistics, and also identify as much as possible those factors that seem to discriminate between the good and the bad teams.
+
+## Next Steps
+1. Predicting Regular Season Performance: Develop models to predict a team's regular-season performance, considering factors such as player statistics, team dynamics, strength of schedule, and historical performance. 
+2. Draft Strategy Evaluation: Assess the effectiveness of teams' draft strategies by analyzing the performance of drafted players over time. Examine whether high draft picks lead to improved playoff prospects.
+3. Home Field Advantage Analysis: Study the significance of home field advantage in the context of playoff qualification. Analyze teams' performance at home versus away and assess whether certain teams consistently perform better in specific environments.
+4. Weather Impact on Performance: Investigate how weather conditions during games influence team performance. Consider factors like temperature, precipitation, and wind speed 
+5. Game Outcome Prediction: Extend the analysis to predict the outcome of individual games during the regular season. Explore how well models can predict wins and losses based on various factors.
+6. Coin Toss Analysis: Explore the impact of the coin toss on a team's success. Investigate whether winning the coin toss at the beginning of a game correlates with a higher likelihood of winning.
+
 # References
 
 ## Data
