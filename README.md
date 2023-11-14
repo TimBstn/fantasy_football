@@ -4,7 +4,7 @@ This project presents a rigorous statistical analysis of the factors influencing
 
 The research delves into both offensive and defensive dimensions, unraveling the intricate interplay between various performance metrics and postseason success. Through systematic examination and hypothesis testing, the study aims to contribute valuable insights into the nuanced dynamics that separate playoff-bound teams from those falling short.
 
-Key objectives include identifying statistically significant indicators and elucidating their impact on playoff qualification. By employing PCA and XGBoost, the paper seeks to distill complex datasets into their essential components, offering a clearer understanding of the critical variables at play. This research not only sheds light on the relative importance of different offensive and defensive metrics but also provides a holistic perspective on the role of special teams and kicking in determining playoff success.
+Key objectives include identifying statistically significant indicators and elucidating their impact on playoff qualification. By employing PCA and XGBoost, the project seeks to distill complex datasets into their essential components, offering a clearer understanding of the critical variables at play. This research not only sheds light on the relative importance of different offensive and defensive metrics but also provides a holistic perspective on the role of special teams and kicking in determining playoff success.
 
 The findings of this study are expected to provide NFL analysts, coaches, and enthusiasts with actionable insights, enabling more informed decision-making and strategic planning. Furthermore, the methodology employed in this research may serve as a template for similar analyses in other sports contexts, contributing to the broader field of sports analytics.
 
@@ -34,8 +34,53 @@ By applying PCA, we aim to identify the most influential components that contrib
 
 PCA serves as a valuable tool for feature extraction and dimensionality reduction, offering a unique perspective on the underlying structure of the data. By examining the loadings of each variable on the principal components, we gain insights into which offensive, defensive, and special teams metrics contribute most significantly to the variability in NFL playoff qualification. PCA adds depth to our analysis by revealing the fundamental factors that shape a team's success in securing a coveted playoff spot.
 
+## Related Work
+(Fokoue 2001): This paper employs machine learning and data mining methods to analyze various performance metrics in American football, aiming to identify key factors contributing to the success of top NFL teams. The study encompasses a broad range of performance statistics and variables, including winning percentage, playoff appearances, and championship wins. The research specifically investigates the widely held notion that defense plays a crucial role in winning championships. Additionally, the paper explores the claim that a high third-down conversion percentage is indicative of playoff and championship-caliber teams. By utilizing five years of data from 2006 to 2010, the authors apply cluster analysis, principal component analysis, factor analysis, support vector machine, and traditional logistic regression. The results consistently reveal compelling and intriguing elements that contribute to the greatness of NFL teams over the years.
+
 ## Analysis
-(Fokoue 2001): In a similar spirit, this paper considers five years (2006-2010) worth of NFL end of season statistics, and seek to use data mining and machine learning techniques to find out if teams can be automatically classified as good or bad based on those statistics, and also identify as much as possible those factors that seem to discriminate between the good and the bad teams.
+In our comprehensive analysis of football team performance, we employ an extensive dataset comprising over 40 offensive and defensive variables (see [Factor Dictionary](factor_dictionary.md)). By examining a wide array of metrics, we aim to discern the key factors that contribute to a team's success on the field. To gauge the overall effectiveness of a team, we utilize a binary variable indicating playoff participation – a decisive measure of performance. Our study spans the seasons from 2010 to 2022, allowing us to capture and analyze the evolving landscape of football over this substantial timeframe. 
+
+### Boxplots
+In the inaugural stage of our analysis, we are employing boxplots to visually unravel the pivotal factors that determine a team's fate in the NFL playoffs.
+A stark contrast emerges in offensive factors between playoff and non-playoff teams. 
+
+#### Offensive Yards
+![offense](plots/yards.png)
+
+Diving into the statistical arena, our initial exploration revolves around the boxplots of crucial offensive yardage metrics, including yards per game, yards per play, yards per pass, and yards per run. The visual narrative that unfolds is compelling, painting a distinct picture of playoff-bound teams boasting higher means and medians across these yardage categories in comparison to their non-playoff counterparts. 
+
+#### Defensive Yards
+
+![defense](plots/yards_defense.png)
+Shifting our focus to the defensive side of the gridiron, a distinct pattern emerges as we examine the yardage metrics. Boxplots vividly depict that playoff teams consistently boast lower means and medians across yards per game, yards per play, yards per pass, and yards per run when compared to their non-playoff counterparts. 
+
+#### Offensive Touchdown vs. Turnover
+![touchdown](plots/touchdown_turnover.png)
+
+Expanding our analytical lens to encompass touchdown and turnover metrics, a compelling trend materializes within the realm of NFL playoff dynamics. Boxplots vividly illustrate that playoff-bound teams showcase a distinct advantage in both total touchdowns and the percentage of drives culminating in scoring plays. Equally noteworthy is the offensive prowess exhibited by playoff teams, as reflected in the smaller percentages of drives ending in turnovers and the overall reduction in total turnovers. 
+
+#### Defensive Touchdown vs. Turnover
+![touchdown](plots/touchdown_turnover_defense.png)
+In the realm of defensive metrics, a discernible pattern takes shape as we scrutinize the touchdowns and takeaway statistics for playoff teams. The boxplots illuminate a consistent trend where playoff-bound teams showcase lower means and medians in total touchdowns allowed and touchdown percentage, indicative of a staunch defensive resilience that mitigates opponents' ability to reach the end zone. Simultaneously, the higher means and medians in both takeaways and takeaway percentage for playoff teams suggest an increased propensity for forcing turnovers. 
+
+#### Conversion Rates Offense
+![conversions](plots/conversions.png)
+Delving deeper into the intricate fabric of NFL team dynamics, our exploration extends to the critical domains of third and fourth-down conversion rates, as well as red zone efficiency. The boxplots tell a compelling tale, revealing that playoff teams consistently exhibit higher means and medians in these conversion metrics compared to their non-playoff counterparts. 
+
+#### Conversion Rates Defense
+![conversions](plots/conversion_defense.png)
+ The boxplots illuminate a consistent narrative wherein playoff-bound teams exhibit lower means and medians in opponent third-down, fourth-down, and red zone conversion percentages. This defensive prowess signifies an enhanced capacity to thwart opponents when it matters most, denying crucial conversions on third and fourth downs and tightening the defensive screws within the red zone. 
+
+#### Special Teams Offense
+![special](plots/sepcial_teams_offense.png)
+![kicking](plots/kicking.png)
+
+#### Special Teams Defense
+![special](plots/sepcial_teams_defense.png)
+
+Interestingly, the same level of influence does not extend to special teams. Our analysis suggests that, unlike their offensive and defensive counterparts, the specialized units on the field may not wield as much impact in determining playoff success.
+
+
 
 ## Next Steps
 1. Predicting Regular Season Performance: Develop models to predict a team's regular-season performance, considering factors such as player statistics, team dynamics, strength of schedule, and historical performance. 

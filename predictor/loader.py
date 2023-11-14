@@ -96,6 +96,12 @@ def load_data_offense():
             "punts_inside_20_pct",
         ]
     ]
+    punting_offense["punts_touchback_pct"] = (
+        punting_offense["punts_touchback_pct"].str.rstrip("%").astype("float") / 100.0
+    )
+    punting_offense["punts_inside_20_pct"] = (
+        punting_offense["punts_inside_20_pct"].str.rstrip("%").astype("float") / 100.0
+    )
     total_offense = total_offense.merge(right=punting_offense, on=["year", "team_id"])
 
     conversion_offense = pd.read_excel("data/offense/conversion_offense.xlsx")
@@ -108,6 +114,18 @@ def load_data_offense():
             "red_zone_conversion_pct",
         ]
     ]
+    conversion_offense["third_down_conversion_pct"] = (
+        conversion_offense["third_down_conversion_pct"].str.rstrip("%").astype("float")
+        / 100.0
+    )
+    conversion_offense["fourth_down_conversion_pct"] = (
+        conversion_offense["fourth_down_conversion_pct"].str.rstrip("%").astype("float")
+        / 100.0
+    )
+    conversion_offense["red_zone_conversion_pct"] = (
+        conversion_offense["red_zone_conversion_pct"].str.rstrip("%").astype("float")
+        / 100.0
+    )
     total_offense = total_offense.merge(
         right=conversion_offense, on=["year", "team_id"]
     )
@@ -192,7 +210,7 @@ def load_data_defense():
     ]
     total_defense = total_defense.merge(right=returning_defense, on=["year", "team_id"])
 
-    punting_defense= pd.read_excel("data/defense/punting_defense.xlsx")
+    punting_defense = pd.read_excel("data/defense/punting_defense.xlsx")
     punting_defense = punting_defense[
         [
             "year",
@@ -212,6 +230,19 @@ def load_data_defense():
             "red_zone_conversion_pct",
         ]
     ]
+    conversion_defense["third_down_conversion_pct"] = (
+        conversion_defense["third_down_conversion_pct"].str.rstrip("%").astype("float")
+        / 100.0
+    )
+    conversion_defense["fourth_down_conversion_pct"] = (
+        conversion_defense["fourth_down_conversion_pct"].str.rstrip("%").astype("float")
+        / 100.0
+    )
+    conversion_defense["red_zone_conversion_pct"] = (
+        conversion_defense["red_zone_conversion_pct"].str.rstrip("%").astype("float")
+        / 100.0
+    )
+
     total_defense = total_defense.merge(
         right=conversion_defense, on=["year", "team_id"]
     )
@@ -225,6 +256,5 @@ def load_data_defense():
         ]
     ]
     total_defense = total_defense.merge(right=playoff_history, on=["year", "team_id"])
-
 
     return total_defense
