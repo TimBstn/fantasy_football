@@ -38,7 +38,7 @@ PCA serves as a valuable tool for feature extraction and dimensionality reductio
 (Fokoue 2001): This paper employs machine learning and data mining methods to analyze various performance metrics in American football, aiming to identify key factors contributing to the success of top NFL teams. The study encompasses a broad range of performance statistics and variables, including winning percentage, playoff appearances, and championship wins. The research specifically investigates the widely held notion that defense plays a crucial role in winning championships. Additionally, the paper explores the claim that a high third-down conversion percentage is indicative of playoff and championship-caliber teams. By utilizing five years of data from 2006 to 2010, the authors apply cluster analysis, principal component analysis, factor analysis, support vector machine, and traditional logistic regression. The results consistently reveal compelling and intriguing elements that contribute to the greatness of NFL teams over the years.
 
 ## Analysis
-In our comprehensive analysis of football team performance, we employ an extensive dataset comprising over 40 offensive and defensive variables (see [Factor Dictionary](factor_dictionary.md)). By examining a wide array of metrics, we aim to discern the key factors that contribute to a team's success on the field. To gauge the overall effectiveness of a team, we utilize a binary variable indicating playoff participation – a decisive measure of performance. Our study spans the seasons from 2010 to 2022, allowing us to capture and analyze the evolving landscape of football over this substantial timeframe. 
+In our comprehensive analysis of football team performance, we employ an extensive dataset comprising over 40 offensive and defensive variables (see [Factor Dictionary](factor_dictionary.md)). By examining a wide array of metrics, we aim to discern the key factors that contribute to a team's success on the field. To gauge the overall effectiveness of a team, we utilize a binary variable indicating playoff participation – a decisive measure of performance. Our study spans the seasons from 2003 to 2022, allowing us to capture and analyze the evolving landscape of football over this substantial timeframe. 
 
 ### Boxplots
 In the inaugural stage of our analysis, we are employing boxplots to visually unravel the pivotal factors that determine a team's fate in the NFL playoffs.
@@ -81,6 +81,101 @@ Delving deeper into the intricate fabric of NFL team dynamics, our exploration e
 Interestingly, the same level of influence does not extend to special teams. Our analysis suggests that, unlike their offensive and defensive counterparts, the specialized units on the field may not wield as much impact in determining playoff success.
 
 
+### Two-Sample t-test
+A two-sample t-test, or independent-sample test, assesses the differences between the means of two distinct sample groups. The objective is to compare the means of samples originating from separate populations. 
+In this study, a two-sample t-test is employed to examine the significance of a variable in predicting whether a team reaches the NFL playoffs or not. The p-value, with a predetermined significance level of 0.05, is utilized to evaluate the results. The null hypothesis posits that the means of the two populations are equal.
+
+#### Offensive Factors
+| Factor                       |     t-stat |       p-value | Significant   |
+|:-----------------------------|-----------:|--------------:|:--------------|
+| total_yards                  |   7.96996  |   6.84565e-15 | True          |
+| offensive_plays              |   1.77828  |   0.0758115   | False         |
+| yards_per_play               |  11.525    |   3.65651e-28 | True          |
+| turnovers_lost               | -11.2005   |   8.24029e-27 | True          |
+| first_downs                  |   7.99832  |   5.54953e-15 | True          |
+| passes_completed             |   2.07982  |   0.0379217   | True          |
+| passes_attempted             |  -1.6939   |   0.0907486   | False         |
+| net_yards_gained_per_pass    |  13.686    |   8.93865e-38 | True          |
+| yards_passing                |   5.5797   |   3.49946e-08 | True          |
+| touchdowns_passing           |  10.5858   |   2.54959e-24 | True          |
+| interceptions                | -11.1293   |   1.61911e-26 | True          |
+| rushing_attempted            |   6.61435  |   7.63534e-11 | True          |
+| yards_rushing                |   6.55175  |   1.13404e-10 | True          |
+| rushing_yards_per_attempt    |   3.1001   |   0.00201563  | True          |
+| touchdowns_rushing           |  10.2208   |   6.90777e-23 | True          |
+| penalties_opponent           |  -3.00033  |   0.002797    | True          |
+| yards_penalties_opponent     |  -2.0011   |   0.0457845   | True          |
+| pct_drives_ending_score      |  16.5992   |   4.3457e-52  | True          |
+| pct_drives_ending_turnover   | -12.4765   |   2.846e-32   | True          |
+| completion_pct               |   9.64196  |   1.08853e-20 | True          |
+| yards_per_game               |  12.1731   |   6.11952e-31 | True          |
+| touchdown_interception_ratio |  11.5486   |   2.90962e-28 | True          |
+| pass_run_ratio               |  -5.94299  |   4.50078e-09 | True          |
+| total_touchdowns             |  14.3426   |   7.00331e-41 | True          |
+| two_points_made              | nan        | nan           | False         |
+| two_points_attempted         |  -1.56384  |   0.118328    | False         |
+| extra_points_made            |  14.98     |   5.74345e-44 | True          |
+| extra_points_attempted       |  14.9351   |   9.5204e-44  | True          |
+| field_goals_made             |   5.13412  |   3.71955e-07 | True          |
+| field_goals_attempted        |   3.83797  |   0.000135798 | True          |
+| points_per_game              |  18.3368   |   3.59444e-61 | True          |
+| field_goal_pct               |   4.23152  |   2.64468e-05 | True          |
+| extra_point_pct              |   1.09012  |   0.276054    | False         |
+| two_point_pct                | nan        | nan           | False         |
+| punts_returned               |   2.53783  |   0.0113796   | True          |
+| yards_per_punt_return        |   0.398228 |   0.690589    | False         |
+| kickoffs_returned            |  -4.79048  |   2.04991e-06 | True          |
+| yards_per_kickoff_return     |   0.557422 |   0.577425    | False         |
+| all_purpose_yards            |   4.46549  |   9.3738e-06  | True          |
+| punts_avg_yards              |  -0.168695 |   0.866088    | False         |
+| punts_touchback_pct          |   1.414    |   0.157827    | False         |
+| punts_inside_20_pct          |   5.98234  |   3.58061e-09 | True          |
+| third_down_conversion_pct    |  11.8198   |   2.05276e-29 | True          |
+| fourth_down_conversion_pct   |   3.50629  |   0.00048472  | True          |
+| red_zone_conversion_pct      |   8.42125  |   2.26206e-16 | True          |
+
+Factors such as total yards, yards per play, turnovers lost, first downs, and several others exhibit statistically significant relationships with playoff qualification, as indicated by low p-values. On the other hand, factors like offensive plays, passes attempted, two points made, extra point percentage, and others do not show significant associations based on the given significance level.
+
+#### Defensive Factors
+| Factor                         |     t-stat |       p-value | Significant   |
+|:-------------------------------|-----------:|--------------:|:--------------|
+| points_against                 | -12.3634   |   8.98605e-32 | True          |
+| total_yards                    |  -5.59248  |   3.26194e-08 | True          |
+| defensive_plays                |  -2.23822  |   0.0255346   | True          |
+| yards_per_play                 |  -7.30652  |   7.81961e-13 | True          |
+| takeaways                      |   6.93697  |   9.45899e-12 | True          |
+| first_downs                    |  -4.74788  |   2.5151e-06  | True          |
+| passes_completed               |   1.35709  |   0.175209    | False         |
+| passes_attempted               |   4.09686  |   4.70068e-05 | True          |
+| yards_passing                  |  -2.28623  |   0.0225522   | True          |
+| touchdowns_passing             |  -5.82251  |   8.99494e-09 | True          |
+| interceptions                  |   6.7789   |   2.65898e-11 | True          |
+| net_yards_gained_per_pass      | -11.057    |   3.2067e-26  | True          |
+| rushing_attempted              | -10.1701   |   1.08476e-22 | True          |
+| yards_rushing                  |  -8.56071  |   7.65498e-17 | True          |
+| touchdowns_rushing             |  -8.45794  |   1.70328e-16 | True          |
+| rushing_yards_per_attempt      |  -2.07839  |   0.0380537   | True          |
+| penalties_commited             |   0.119547 |   0.904878    | False         |
+| yards_penalties_commited       |   0.357859 |   0.720561    | False         |
+| first_downs_penalties_commited |  -1.42415  |   0.154869    | False         |
+| pct_drives_ending_score        | -11.6182   |   1.47818e-28 | True          |
+| pct_drives_ending_turnover     |   9.35169  |   1.26884e-19 | True          |
+| completion_pct                 |  -5.56258  |   3.84398e-08 | True          |
+| yards_per_game                 |  -8.14845  |   1.80896e-15 | True          |
+| touchdown_interception_ratio   |  -6.74363  |   3.33969e-11 | True          |
+| total_touchdowns               | -10.9668   |   7.48136e-26 | True          |
+| points_per_game                | -15.3159   |   1.27586e-45 | True          |
+| punts_returned                 |  -8.17512  |   1.47972e-15 | True          |
+| yards_per_punt_return          |  -2.52464  |   0.0118113   | True          |
+| kickoffs_returned              | nan        | nan           | False         |
+| yards_per_kickoff_return       | nan        | nan           | False         |
+| punts_avg_yards                |   1.49969  |   0.134165    | False         |
+| third_down_conversion_pct      |  -6.40454  |   2.83942e-10 | True          |
+| fourth_down_conversion_pct     |  -4.5538   |   6.25847e-06 | True          |
+| red_zone_conversion_pct        |  -1.76204  |   0.0785182   | False         |
+
+Factors such as points against, total yards allowed, defensive plays, yards per play allowed, takeaways, first downs allowed, passes attempted against, interceptions gained, net yards gained per pass allowed, rushing attempts against, yards rushing allowed, touchdowns rushing allowed, third-down conversion percentage allowed, fourth-down conversion percentage allowed, and several others exhibit statistically significant relationships with defensive performance. This is evidenced by low p-values.
+On the other hand, surprisingly factors like passes completed against, penalties committed, yards penalties committed, first downs from penalties committed, punts average yards, red zone conversion percentage allowed, kickoffs returned, and yards per kickoff return do not show significant associations based on the given significance level.
 
 ## Next Steps
 1. Predicting Regular Season Performance: Develop models to predict a team's regular-season performance, considering factors such as player statistics, team dynamics, strength of schedule, and historical performance. 
