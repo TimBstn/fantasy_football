@@ -6,3 +6,5 @@ openpyxl
 selenium
 matplotlib
 scipy
+xgboost
+scikit-learn

@@ -2,13 +2,28 @@ import pandas as pd
 import numpy as np
 
 
-def load_data_offense():
+def combine_nfl_measure_tables(factor: str = "offense") -> pd.DataFrame:
     """
-    Combine Offense DataFrames to one master DataFrame
+    This function combines different NFL measure tables, such as completion, scoring, returning, and punting,
+    into a single DataFrame based on the specified factor ('offense' or 'defense').
+
+    Parameters
+    ----------
+    factor: str, optional
+        The factor to consider, either 'offense' or 'defense'
+
+    Returns
+    -------
+    pd.DataFrame:
+        A DataFrame combining various NFL measure tables related to the specified factor.
+
+    Example
+    -------
+    >>> combined_df = combine_nfl_measure_tables('offense')
     """
-    total_offense = pd.read_excel("data/offense/total_offense.xlsx")
-    total_offense = total_offense[
-        [
+    total = pd.read_excel(f"data/{factor}/total_{factor}.xlsx")
+    if factor == "offense":
+        cols = [
             "year",
             "team_id",
             "games",
@@ -32,124 +47,8 @@ def load_data_offense():
             "pct_drives_ending_score",
             "pct_drives_ending_turnover",
         ]
-    ]
-    total_offense["completion_pct"] = (
-        total_offense["passes_completed"] / total_offense["passes_attempted"]
-    )
-    total_offense["yards_per_game"] = (
-        total_offense["total_yards"] / total_offense["games"]
-    )
-    total_offense["touchdown_interception_ratio"] = (
-        total_offense["touchdowns_passing"] / total_offense["interceptions"]
-    )
-    total_offense["pass_run_ratio"] = (
-        total_offense["passes_attempted"] / total_offense["rushing_attempted"]
-    )
-
-    scoring_offense = pd.read_excel("data/offense/scoring_offense.xlsx")
-    scoring_offense = scoring_offense[
-        [
-            "year",
-            "team_id",
-            "total_touchdowns",
-            "two_points_made",
-            "two_points_attempted",
-            "extra_points_made",
-            "extra_points_attempted",
-            "field_goals_made",
-            "field_goals_attempted",
-            "points_per_game",
-        ]
-    ]
-    scoring_offense["field_goal_pct"] = (
-        scoring_offense["field_goals_made"] / scoring_offense["field_goals_attempted"]
-    )
-    scoring_offense["extra_point_pct"] = (
-        scoring_offense["extra_points_made"] / scoring_offense["extra_points_attempted"]
-    )
-    scoring_offense["two_point_pct"] = (
-        scoring_offense["two_points_made"] / scoring_offense["two_points_attempted"]
-    )
-    total_offense = total_offense.merge(right=scoring_offense, on=["year", "team_id"])
-
-    returning_offense = pd.read_excel("data/offense/returning_offense.xlsx")
-    returning_offense = returning_offense[
-        [
-            "year",
-            "team_id",
-            "punts_returned",
-            "yards_per_punt_return",
-            "kickoffs_returned",
-            "yards_per_kickoff_return",
-            "all_purpose_yards",
-        ]
-    ]
-    total_offense = total_offense.merge(right=returning_offense, on=["year", "team_id"])
-
-    punting_offense = pd.read_excel("data/offense/punting_offense.xlsx")
-    punting_offense = punting_offense[
-        [
-            "year",
-            "team_id",
-            "punts_avg_yards",
-            "punts_touchback_pct",
-            "punts_inside_20_pct",
-        ]
-    ]
-    punting_offense["punts_touchback_pct"] = (
-        punting_offense["punts_touchback_pct"].str.rstrip("%").astype("float") / 100.0
-    )
-    punting_offense["punts_inside_20_pct"] = (
-        punting_offense["punts_inside_20_pct"].str.rstrip("%").astype("float") / 100.0
-    )
-    total_offense = total_offense.merge(right=punting_offense, on=["year", "team_id"])
-
-    conversion_offense = pd.read_excel("data/offense/conversion_offense.xlsx")
-    conversion_offense = conversion_offense[
-        [
-            "year",
-            "team_id",
-            "third_down_conversion_pct",
-            "fourth_down_conversion_pct",
-            "red_zone_conversion_pct",
-        ]
-    ]
-    conversion_offense["third_down_conversion_pct"] = (
-        conversion_offense["third_down_conversion_pct"].str.rstrip("%").astype("float")
-        / 100.0
-    )
-    conversion_offense["fourth_down_conversion_pct"] = (
-        conversion_offense["fourth_down_conversion_pct"].str.rstrip("%").astype("float")
-        / 100.0
-    )
-    conversion_offense["red_zone_conversion_pct"] = (
-        conversion_offense["red_zone_conversion_pct"].str.rstrip("%").astype("float")
-        / 100.0
-    )
-    total_offense = total_offense.merge(
-        right=conversion_offense, on=["year", "team_id"]
-    )
-
-    playoff_history = pd.read_excel("data/playoffs/playoff_history.xlsx")
-    playoff_history = playoff_history[
-        [
-            "year",
-            "team_id",
-            "made_playoffs",
-        ]
-    ]
-    total_offense = total_offense.merge(right=playoff_history, on=["year", "team_id"])
-
-    return total_offense
-
-
-def load_data_defense():
-    """
-    Combine Defense DataFrames to one master DataFrame
-    """
-    total_defense = pd.read_excel("data/defense/total_defense.xlsx")
-    total_defense = total_defense[
-        [
+    elif factor == "defense":
+        cols = [
             "year",
             "team_id",
             "games",
@@ -175,31 +74,61 @@ def load_data_defense():
             "pct_drives_ending_score",
             "pct_drives_ending_turnover",
         ]
-    ]
-    total_defense["completion_pct"] = (
-        total_defense["passes_completed"] / total_defense["passes_attempted"]
+    total = total[cols]
+    total["completion_pct"] = total["passes_completed"] / total["passes_attempted"]
+    total["yards_per_game"] = total["total_yards"] / total["games"]
+    total["touchdown_interception_ratio"] = (
+        total["touchdowns_passing"] / total["interceptions"]
     )
-    total_defense["yards_per_game"] = (
-        total_defense["total_yards"] / total_defense["games"]
-    )
-    total_defense["touchdown_interception_ratio"] = (
-        total_defense["touchdowns_passing"] / total_defense["interceptions"]
-    )
+    total["pass_run_ratio"] = total["passes_attempted"] / total["rushing_attempted"]
 
-    scoring_defense = pd.read_excel("data/defense/scoring_defense.xlsx")
-    scoring_defense = scoring_defense[
-        [
+    scoring = pd.read_excel(f"data/{factor}/scoring_{factor}.xlsx")
+    if factor == "offense":
+        cols = [
+            "year",
+            "team_id",
+            "total_touchdowns",
+            "two_points_made",
+            "two_points_attempted",
+            "extra_points_made",
+            "extra_points_attempted",
+            "field_goals_made",
+            "field_goals_attempted",
+            "points_per_game",
+        ]
+        scoring = scoring[cols]
+        scoring["field_goal_pct"] = (
+            scoring["field_goals_made"] / scoring["field_goals_attempted"]
+        )
+        scoring["extra_point_pct"] = (
+            scoring["extra_points_made"] / scoring["extra_points_attempted"]
+        )
+        scoring["two_point_pct"] = (
+            scoring["two_points_made"] / scoring["two_points_attempted"]
+        )
+    elif factor == "defense":
+        cols = [
             "year",
             "team_id",
             "total_touchdowns",
             "points_per_game",
         ]
-    ]
-    total_defense = total_defense.merge(right=scoring_defense, on=["year", "team_id"])
+        scoring = scoring[cols]
+    total = total.merge(right=scoring, on=["year", "team_id"])
 
-    returning_defense = pd.read_excel("data/defense/returning_defense.xlsx")
-    returning_defense = returning_defense[
-        [
+    returning = pd.read_excel(f"data/{factor}/returning_{factor}.xlsx")
+    if factor == "offense":
+        cols = [
+            "year",
+            "team_id",
+            "punts_returned",
+            "yards_per_punt_return",
+            "kickoffs_returned",
+            "yards_per_kickoff_return",
+            "all_purpose_yards",
+        ]
+    elif factor == "defense":
+        cols = [
             "year",
             "team_id",
             "punts_returned",
@@ -207,21 +136,37 @@ def load_data_defense():
             "kickoffs_returned",
             "yards_per_kickoff_return",
         ]
-    ]
-    total_defense = total_defense.merge(right=returning_defense, on=["year", "team_id"])
+    returning = returning[cols]
+    total = total.merge(right=returning, on=["year", "team_id"])
 
-    punting_defense = pd.read_excel("data/defense/punting_defense.xlsx")
-    punting_defense = punting_defense[
-        [
+    punting = pd.read_excel(f"data/{factor}/punting_{factor}.xlsx")
+    if factor == "offense":
+        cols = [
+            "year",
+            "team_id",
+            "punts_avg_yards",
+            "punts_touchback_pct",
+            "punts_inside_20_pct",
+        ]
+        punting = punting[cols]
+        punting["punts_touchback_pct"] = (
+            punting["punts_touchback_pct"].str.rstrip("%").astype("float") / 100.0
+        )
+        punting["punts_inside_20_pct"] = (
+            punting["punts_inside_20_pct"].str.rstrip("%").astype("float") / 100.0
+        )
+    elif factor == "defense":
+        cols = [
             "year",
             "team_id",
             "punts_avg_yards",
         ]
-    ]
-    total_defense = total_defense.merge(right=punting_defense, on=["year", "team_id"])
+        punting = punting[cols]
 
-    conversion_defense = pd.read_excel("data/defense/conversion_defense.xlsx")
-    conversion_defense = conversion_defense[
+    total = total.merge(right=punting, on=["year", "team_id"])
+
+    conversion = pd.read_excel(f"data/{factor}/conversion_{factor}.xlsx")
+    conversion = conversion[
         [
             "year",
             "team_id",
@@ -230,22 +175,16 @@ def load_data_defense():
             "red_zone_conversion_pct",
         ]
     ]
-    conversion_defense["third_down_conversion_pct"] = (
-        conversion_defense["third_down_conversion_pct"].str.rstrip("%").astype("float")
-        / 100.0
+    conversion["third_down_conversion_pct"] = (
+        conversion["third_down_conversion_pct"].str.rstrip("%").astype("float") / 100.0
     )
-    conversion_defense["fourth_down_conversion_pct"] = (
-        conversion_defense["fourth_down_conversion_pct"].str.rstrip("%").astype("float")
-        / 100.0
+    conversion["fourth_down_conversion_pct"] = (
+        conversion["fourth_down_conversion_pct"].str.rstrip("%").astype("float") / 100.0
     )
-    conversion_defense["red_zone_conversion_pct"] = (
-        conversion_defense["red_zone_conversion_pct"].str.rstrip("%").astype("float")
-        / 100.0
+    conversion["red_zone_conversion_pct"] = (
+        conversion["red_zone_conversion_pct"].str.rstrip("%").astype("float") / 100.0
     )
-
-    total_defense = total_defense.merge(
-        right=conversion_defense, on=["year", "team_id"]
-    )
+    total = total.merge(right=conversion, on=["year", "team_id"])
 
     playoff_history = pd.read_excel("data/playoffs/playoff_history.xlsx")
     playoff_history = playoff_history[
@@ -255,6 +194,6 @@ def load_data_defense():
             "made_playoffs",
         ]
     ]
-    total_defense = total_defense.merge(right=playoff_history, on=["year", "team_id"])
+    total = total.merge(right=playoff_history, on=["year", "team_id"])
 
-    return total_defense
+    return total

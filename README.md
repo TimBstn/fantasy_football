@@ -177,6 +177,89 @@ Factors such as total yards, yards per play, turnovers lost, first downs, and se
 Factors such as points against, total yards allowed, defensive plays, yards per play allowed, takeaways, first downs allowed, passes attempted against, interceptions gained, net yards gained per pass allowed, rushing attempts against, yards rushing allowed, touchdowns rushing allowed, third-down conversion percentage allowed, fourth-down conversion percentage allowed, and several others exhibit statistically significant relationships with defensive performance. This is evidenced by low p-values.
 On the other hand, surprisingly factors like passes completed against, penalties committed, yards penalties committed, first downs from penalties committed, punts average yards, red zone conversion percentage allowed, kickoffs returned, and yards per kickoff return do not show significant associations based on the given significance level.
 
+### XGBoost
+
+The process involves loading offensive and defensive data sets and merging them into a single dataframe. Subsequently, an XGBoost model is created. To account for the stochastic nature of the model, the XGBoost model is run 100 times. Finally, feature importance is extracted as the mean value across all 100 model runs, providing a comprehensive understanding of the significant factors influencing the model's predictions. <br>
+
+The XGBoost model highlighted ten critical features. Among these, offensive efficiency played a pivotal role, with "pct_drives_ending_score_offense" (percentage of offensive drives ending in a score) and "total_touchdowns_offense" proving significant. Defensive prowess, as indicated by "pct_drives_ending_score_defense" and "yards_per_game_defense," was equally crucial. Furthermore, metrics such as "touchdown_interception_ratio_offense" reflected passing game efficiency, while "rushing_attempted_defense" and "rushing_attempted_offense" underscored the importance of run defense and offensive balance. Defensive adaptability, assessed through "pass_run_ratio_defense," and the ability to force turnovers, measured by "pct_drives_ending_turnover_defense," were identified as key factors. Lastly, "net_yards_gained_per_pass_defense" highlighted the significance of a robust pass defense. These features collectively provided insights into the multifaceted dynamics influencing NFL playoff qualification, emphasizing both offensive and defensive dimensions.
+
+|   Factor                               |  Factor Importance|
+|:---------------------------------------|-----------:|
+| pct_drives_ending_score_offense        | 0.0965224  |
+| pct_drives_ending_score_defense        | 0.0692892  |
+| total_touchdowns_offense               | 0.0568313  |
+| yards_per_game_defense                 | 0.0399473  |
+| touchdown_interception_ratio_offense   | 0.0347519  |
+| rushing_attempted_defense              | 0.0320811  |
+| pass_run_ratio_defense                 | 0.0253415  |
+| rushing_attempted_offense              | 0.023171   |
+| pct_drives_ending_turnover_defense     | 0.0218374  |
+| net_yards_gained_per_pass_defense      | 0.0203084  |
+| yards_passing_defense                  | 0.0179276  |
+| field_goals_attempted_offense          | 0.0178442  |
+| punts_inside_20_pct_offense            | 0.0174141  |
+| completion_pct_offense                 | 0.0173532  |
+| first_downs_defense                    | 0.0163953  |
+| yards_passing_offense                  | 0.0162953  |
+| kickoffs_returned_defense              | 0.0150837  |
+| pct_drives_ending_turnover_offense     | 0.0147235  |
+| third_down_conversion_pct_offense      | 0.0144667  |
+| fourth_down_conversion_pct_defense     | 0.0142527  |
+| total_yards_offense                    | 0.0142167  |
+| two_points_attempted_offense           | 0.0136033  |
+| first_downs_offense                    | 0.0135227  |
+| turnovers_lost_offense                 | 0.0131015  |
+| touchdowns_rushing_defense             | 0.0129209  |
+| yards_per_kickoff_return_offense       | 0.0127583  |
+| third_down_conversion_pct_defense      | 0.0119985  |
+| kickoffs_returned_offense              | 0.0119804  |
+| net_yards_gained_per_pass_offense      | 0.0115554  |
+| extra_point_pct_offense                | 0.0115327  |
+| offensive_plays_offense                | 0.0113907  |
+| passes_completed_defense               | 0.0112085  |
+| two_points_made_offense                | 0.010622   |
+| passes_attempted_offense               | 0.0103756  |
+| yards_per_punt_return_offense          | 0.00977218 |
+| yards_rushing_defense                  | 0.00952023 |
+| rushing_yards_per_attempt_defense      | 0.00935285 |
+| penalties_opponent_offense             | 0.0091206  |
+| field_goals_made_offense               | 0.0088086  |
+| interceptions_offense                  | 0.00877517 |
+| pass_run_ratio_offense                 | 0.00854397 |
+| red_zone_conversion_pct_offense        | 0.00852891 |
+| punts_returned_offense                 | 0.00817557 |
+| field_goal_pct_offense                 | 0.00787016 |
+| yards_penalties_opponent_offense       | 0.00758897 |
+| all_purpose_yards_offense              | 0.00756149 |
+| touchdown_interception_ratio_defense   | 0.00737512 |
+| touchdowns_passing_defense             | 0.00729466 |
+| yards_per_punt_return_defense          | 0.00707698 |
+| completion_pct_defense                 | 0.00697416 |
+| punts_touchback_pct_offense            | 0.00696238 |
+| yards_rushing_offense                  | 0.00693792 |
+| passes_completed_offense               | 0.00688684 |
+| defensive_plays_defense                | 0.00668567 |
+| rushing_yards_per_attempt_offense      | 0.00665142 |
+| takeaways_defense                      | 0.00642228 |
+| yards_per_game_offense                 | 0.0062843  |
+| yards_per_kickoff_return_defense       | 0.00623636 |
+| passes_attempted_defense               | 0.00595492 |
+| touchdowns_rushing_offense             | 0.00563577 |
+| interceptions_defense                  | 0.00557449 |
+| first_downs_penalties_commited_defense | 0.00534859 |
+| punts_avg_yards_offense                | 0.00475517 |
+| penalties_commited_defense             | 0.00445782 |
+| two_point_pct_offense                  | 0.00433484 |
+| red_zone_conversion_pct_defense        | 0.0042823  |
+| yards_penalties_commited_defense       | 0.00385514 |
+| total_yards_defense                    | 0.00327812 |
+| yards_per_play_offense                 | 0.00323251 |
+| fourth_down_conversion_pct_offense     | 0.00272016 |
+| yards_per_play_defense                 | 0.00245926 |
+| touchdowns_passing_offense             | 0.00245728 |
+| punts_returned_defense                 | 0.00235374 |
+| punts_avg_yards_defense                | 0.00126794 |
+
 ## Next Steps
 1. Predicting Regular Season Performance: Develop models to predict a team's regular-season performance, considering factors such as player statistics, team dynamics, strength of schedule, and historical performance. 
 2. Draft Strategy Evaluation: Assess the effectiveness of teams' draft strategies by analyzing the performance of drafted players over time. Examine whether high draft picks lead to improved playoff prospects.
